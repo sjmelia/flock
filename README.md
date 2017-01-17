@@ -1,5 +1,5 @@
 [![nuget][nuget-badge]][nuget-url]
-[nuget-badge]: https://img.shields.io/badge/nuget-v5.3.0-blue.svg 
+[nuget-badge]: https://img.shields.io/nuget/v/Flock.svg 
 [nuget-url]: https://www.nuget.org/packages/Flock 
 
 Flock
