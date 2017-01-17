@@ -1,5 +1,17 @@
 {
+  "title": "Flock",
+  "authors": [ "Steve Melia" ],
+  "description": "cross platform blocking file locks",
   "version": "1.0.0-*",
+  "packOptions": {
+    "projectUrl": "https://github.com/sjmelia/flock",
+    "repository": { "url": "https://github.com/sjmelia/flock" },
+    "licenseUrl": "https://opensource.org/license/MIT",
+    "requireLicenseAcceptance": false,
+    "owners": [ "Steve Melia" ],
+    "tags": [ "dotnetcore", "locking", "file locking", "fcntl", "LockFileEx" ],
+    "summary": "File locks using LockFileEx on Win32 and fcntl on Linux to implement blocking waits"
+  },
 
   "dependencies": {
     "NETStandard.Library": "1.6.0",
@@ -14,7 +26,6 @@
   },
 
   "buildOptions": {
-    "allowUnsafe": true,
     "xmlDoc": true
   }
 }

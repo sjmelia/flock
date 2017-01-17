@@ -27,7 +27,7 @@
         /// <param name="overlapped">Overlapped struct.</param>
         /// <returns>Success or failure.</returns>
         [DllImport("kernel32.dll", SetLastError = true)]
-        public static unsafe extern bool LockFileEx(SafeFileHandle handle, uint flags, uint mustBeZero, int countLow, int countHigh, NativeOverlapped overlapped);
+        public static extern bool LockFileEx(SafeFileHandle handle, uint flags, uint mustBeZero, int countLow, int countHigh, NativeOverlapped overlapped);
 
         /// <summary>
         /// The Win32 UnlockFileEx function.
@@ -39,6 +39,6 @@
         /// <param name="overlapped">Overlapped struct.</param>
         /// <returns>Success or failure.</returns>
         [DllImport("kernel32.dll", SetLastError = true)]
-        public static unsafe extern bool UnlockFileEx(SafeFileHandle handle, uint mustBeZero, int countLow, int countHigh, NativeOverlapped overlapped);
+        public static extern bool UnlockFileEx(SafeFileHandle handle, uint mustBeZero, int countLow, int countHigh, NativeOverlapped overlapped);
     }
 }
