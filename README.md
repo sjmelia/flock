@@ -7,7 +7,7 @@ method. This will soon be [available in dotnetcore](https://github.com/dotnet/co
 
 However, it is not possible to do this and have the OS notify when the lock is
 available; i.e. a blocking lock. Implementing this in fully managed code
-requires a spinlock of some kind, that is polling in a loop until we can
+requires a spinlock of some kind, that is; polling in a loop until we can
 obtain the lock.
 
 This is possible on Win32 by using the [`LockFileEx`](https://msdn.microsoft.com/en-us/library/windows/desktop/aa365203(v=vs.85).aspx)
@@ -16,7 +16,7 @@ function and IO completion ports; and on Linux by using advisory locking with
 blocks the calling thread.
 
 This library exposes these native functions and wraps them in a class `RangeLock`
-which models the lifetime of the lock; that is, disposing a `RangeLock` instance
+which models the lifetime of the lock so that disposing a `RangeLock` instance
 will free its associated lock.
 
 How to use
@@ -24,12 +24,14 @@ How to use
 
 The following will open a file; obtain a lock on the second byte of the file only;
 and write to that second byte. If another process already has a lock that includes
-that byte of the file, it will block on the second line until the lock can be
-obtained.
+that byte of the file, this code will block on the second line until the lock can
+be obtained.
 
 ```
+using Flock;
+...
 using (var stream = new FileStream("sample.txt", FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite))
-using (var rangeLock = new Win32RangeLock(stream, 1, 1))
+using (var rangeLock = new RangeLock(stream, 1, 1))
 {
     stream.Seek(1, SeekOrigin.Begin);
     stream.Write(new byte[] { (byte)'A' }, 0, 1);
