@@ -1,3 +1,7 @@
+[![nuget][nuget-badge]][nuget-url]
+[nuget-badge]: https://img.shields.io/badge/nuget-v5.3.0-blue.svg 
+[nuget-url]: https://www.nuget.org/packages/Flock 
+
 Flock
 =====
 
@@ -16,7 +20,7 @@ function and IO completion ports; and on Linux by using advisory locking with
 blocks the calling thread.
 
 This library exposes these native functions and wraps them in a class `RangeLock`
-which models the lifetime of the lock so that disposing a `RangeLock` instance
+which models the lifetime of the lock such that disposing a `RangeLock` instance
 will free its associated lock.
 
 How to use
@@ -46,9 +50,8 @@ It would be possible to add an implementation using POSIX advisory locking, howe
 this introduces a problem whereby record locks are associated with the process rather than
 the file descriptor; and therefore locks may be released unexpectedly.
 
-On the Windows platform; certain guarantees are available about locking on file shares.
-See the msdn documentation for `LockFileEx`. The situation is less clear on Linux and
-may depend on e.g. the particular NFS implementation. 
+On both Windows and Linux platforms; caution is advised when locking files on network shares;
+as performance/feasibility may depend on server implementations.
 
 Despite some of these pitfalls, it's worth noting that Win32's `LockFileEx` and Unix
 advisory locking are both used [in the SQLite project](https://sqlite.org/lockingv3.html#how_to_corrupt)
