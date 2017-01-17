@@ -16,7 +16,7 @@
         private bool disposedValue = false;
 
         /// <summary>
-        /// Initializes a new instance of the RangeLock class.
+        /// Initializes a new instance of the <see cref="RangeLock"/> class.
         /// </summary>
         /// <remarks>
         /// This constructor blocks until the lock can be obtained.
@@ -46,7 +46,7 @@
         /// </summary>
         public void Dispose()
         {
-            Dispose(true);
+            this.Dispose(true);
         }
 
         /// <summary>
@@ -55,14 +55,14 @@
         /// <param name="disposing">A value indicating whether we are disposing or finalising.</param>
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!this.disposedValue)
             {
                 if (disposing)
                 {
-                    platformSpecificRangeLock.Dispose();
+                    this.platformSpecificRangeLock.Dispose();
                 }
 
-                disposedValue = true;
+                this.disposedValue = true;
             }
         }
     }

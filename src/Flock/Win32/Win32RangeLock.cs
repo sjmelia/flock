@@ -19,7 +19,7 @@
         private bool disposedValue = false;
 
         /// <summary>
-        /// Initializes a new instance of the Win32RangeLock class.
+        /// Initializes a new instance of the <see cref="Win32RangeLock"/> class.
         /// </summary>
         /// <remarks>
         /// https://msdn.microsoft.com/en-us/library/windows/desktop/aa365683(v=vs.85).aspx
@@ -38,6 +38,14 @@
         }
 
         /// <summary>
+        /// Finalizes an instance of the <see cref="Win32RangeLock"/> class.
+        /// </summary>
+        ~Win32RangeLock()
+        {
+           this.Dispose(false);
+        }
+
+        /// <summary>
         /// Disposes the range lock, releasing it.
         /// </summary>
         public void Dispose()
@@ -52,7 +60,7 @@
         /// <param name="disposing">A value indicating whether we are finalising or disposing.</param>
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!this.disposedValue)
             {
                 if (disposing)
                 {
@@ -61,7 +69,7 @@
 
                 this.Unlock(this.stream, this.start, this.length);
 
-                disposedValue = true;
+                this.disposedValue = true;
             }
         }
 
@@ -80,13 +88,14 @@
             overlapped.OffsetHigh = (int)(start >> 32);
             overlapped.OffsetLow = (int)start;
             overlapped.EventHandle = resetEvent.GetSafeWaitHandle().DangerousGetHandle();
-            
+
             uint flags = Native.LOCKFILE_EXCLUSIVE_LOCK;
             if (!Native.LockFileEx(handle, flags, 0, (int)length, (int)(length >> 32), overlapped))
             {
                 int errorCode = Marshal.GetLastWin32Error();
                 throw new RangeLockException(errorCode);
             }
+
             resetEvent.WaitOne();
             resetEvent.Reset();
         }
@@ -109,14 +118,7 @@
             {
                 int errorCode = Marshal.GetLastWin32Error();
                 throw new RangeLockException(errorCode);
-            };
-        }
-
-        /// <summary>
-        /// Finalizer
-        /// </summary>
-        ~Win32RangeLock() {
-           Dispose(false);
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿namespace Flock.Tests
 {
+    using System;
     using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
@@ -10,11 +11,18 @@
         [Fact]
         public void ShouldNotThrow()
         {
-            using (var stream = new FileStream("sample.txt", FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite))
-            using (var rangeLock = new RangeLock(stream, 1, 1))
+            try
             {
-                stream.Seek(1, SeekOrigin.Begin);
-                stream.Write(new byte[] { (byte)'A' }, 0, 1);
+                using (var stream = new FileStream("sample.txt", FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite))
+                using (var rangeLock = new RangeLock(stream, 1, 1))
+                {
+                    stream.Seek(1, SeekOrigin.Begin);
+                    stream.Write(new byte[] { (byte)'A' }, 0, 1);
+                }
+            }
+            catch (RangeLockException e)
+            {
+                Assert.True(false, "Caught a RangeLockException with code " + e.ErrorCode);
             }
         }
 

@@ -18,7 +18,7 @@
         private bool disposedValue = false;
 
         /// <summary>
-        /// Intializes a new instance of the LinuxRangeLock class.
+        /// Initializes a new instance of the <see cref="LinuxRangeLock" /> class.
         /// </summary>
         /// <param name="stream">The stream on which to obtain the lock.</param>
         /// <param name="start">The start of the range of bytes to lock.</param>
@@ -27,21 +27,31 @@
         {
             this.start = start;
             this.length = length;
+
+            // For POSIX locks; (F_SETLKW) would set l_pid to be Native.getpid()
             var fl = new Native.flock()
             {
                 l_type = Native.F_WRLCK,
                 l_whence = Native.SEEK_SET,
                 l_start = this.start,
                 l_len = this.length,
-                l_pid = Native.getpid()
+                l_pid = 0
             };
             this.fd = stream.SafeFileHandle.DangerousGetHandle().ToInt32();
-            var result = Native.Fcntl(fd, Native.F_OFD_SETLKW, ref fl);
+            var result = Native.Fcntl(this.fd, Native.F_OFD_SETLKW, ref fl);
             if (result != 0)
             {
                 var errno = Marshal.GetLastWin32Error();
                 throw new RangeLockException(errno);
             }
+        }
+
+        /// <summary>
+        /// Finalizes an instance of the <see cref="LinuxRangeLock"/> class.
+        /// </summary>
+        ~LinuxRangeLock()
+        {
+            this.Dispose(false);
         }
 
         /// <summary>
@@ -59,7 +69,7 @@
         /// <param name="disposing">A value indicating whether we are finalising or disposing.</param>
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!this.disposedValue)
             {
                 if (disposing)
                 {
@@ -68,7 +78,7 @@
 
                 this.ReleaseLock();
 
-                disposedValue = true;
+                this.disposedValue = true;
             }
         }
 
@@ -77,34 +87,27 @@
         /// </summary>
         private void ReleaseLock()
         {
-            if (fd == -1)
+            if (this.fd == -1)
             {
                 return;
             }
 
+            // For POSIX locks; (F_SETLKW) would set l_pid to be Native.getpid()
             var fl = new Native.flock()
             {
                 l_type = Native.F_UNLCK,
                 l_whence = Native.SEEK_SET,
                 l_start = this.start,
                 l_len = this.length,
-                l_pid = Native.getpid()
+                l_pid = 0
             };
 
-            var result = Native.Fcntl(fd, Native.F_OFD_SETLKW, ref fl);
+            var result = Native.Fcntl(this.fd, Native.F_OFD_SETLKW, ref fl);
             if (result != 0)
             {
                 var errno = Marshal.GetLastWin32Error();
                 throw new RangeLockException(errno);
             }
-        }
-
-        /// <summary>
-        /// Finalizer
-        /// </summary>
-        ~LinuxRangeLock()
-        {
-            this.Dispose(false);
         }
     }
 }

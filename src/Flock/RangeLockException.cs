@@ -8,7 +8,7 @@
     public class RangeLockException : Exception
     {
         /// <summary>
-        /// Initializes a new instance of the RangeLockException class.
+        /// Initializes a new instance of the <see cref="RangeLockException"/> class.
         /// </summary>
         /// <param name="errorCode">The system error code of the exception.</param>
         public RangeLockException(int errorCode)

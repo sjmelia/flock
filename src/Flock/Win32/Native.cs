@@ -1,8 +1,8 @@
 ﻿namespace Flock.Win32
 {
-    using Microsoft.Win32.SafeHandles;
     using System.Runtime.InteropServices;
     using System.Threading;
+    using Microsoft.Win32.SafeHandles;
 
     /// <summary>
     /// Native functions for Win32 LockFileEx.
@@ -12,7 +12,9 @@
         /// <summary>
         /// Flag for an exclusive lock.
         /// </summary>
+        #pragma warning disable SA1310
         public const uint LOCKFILE_EXCLUSIVE_LOCK = 0x00000002;
+        #pragma warning restore SA1310
 
         /// <summary>
         /// The Win32 LockFileEx function.

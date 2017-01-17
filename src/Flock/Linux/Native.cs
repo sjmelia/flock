@@ -1,4 +1,7 @@
-﻿namespace Flock.Linux
+﻿#pragma warning disable SA1300
+#pragma warning disable SA1310
+#pragma warning disable SA1307
+namespace Flock.Linux
 {
     using System.Runtime.InteropServices;
 
@@ -8,9 +11,14 @@
     public class Native
     {
         /// <summary>
-        /// Constant for setting a lock, blocking.
+        /// Constant for setting an open file descriptor lock, blocking.
         /// </summary>
         public const int F_OFD_SETLKW = 38;
+
+        /// <summary>
+        /// Constant for setting a POSIX advisory lock, blocking.
+        /// </summary>
+        public const int F_SETLKW = 0x7;
 
         /// <summary>
         /// Constant for unlocking fcntl
@@ -26,6 +34,23 @@
         /// Constant for relative seek. (Equivalent of SeekOrigin.Begin in .NET)
         /// </summary>
         public const short SEEK_SET = 0x0;
+
+        /// <summary>
+        /// Linux fcntl function.
+        /// </summary>
+        /// <param name="fd">File descriptor.</param>
+        /// <param name="cmd">The fnctl command.</param>
+        /// <param name="ptr">Ptr to a struct containing cmd args.</param>
+        /// <returns>Success or failure.</returns>
+        [DllImport("libc", EntryPoint = "fcntl", SetLastError = true)]
+        public static extern int Fcntl(int fd, int cmd, ref flock ptr);
+
+        /// <summary>
+        /// Gets the PID of the current process.
+        /// </summary>
+        /// <returns>The pid of the current process.</returns>
+        [DllImport("libc.so.6")]
+        public static extern int getpid();
 
         /// <summary>
         /// Struct for Linux advisory file locking fnctl.
@@ -57,22 +82,8 @@
             /// </summary>
             public int l_pid;
         }
-
-        /// <summary>
-        /// Linux fcntl function.
-        /// </summary>
-        /// <param name="fd">File descriptor.</param>
-        /// <param name="cmd">The fnctl command.</param>
-        /// <param name="ptr">Ptr to a struct containing cmd args.</param>
-        /// <returns>Success or failure.</returns>
-        [DllImport("libc", EntryPoint = "fcntl", SetLastError = true)]
-        public static extern int Fcntl(int fd, int cmd, ref flock ptr);
-
-        /// <summary>
-        /// Gets the PID of the current process.
-        /// </summary>
-        /// <returns>The pid of the current process.</returns>
-        [DllImport("libc.so.6")]
-        public static extern int getpid();
     }
 }
+#pragma warning restore SA1300
+#pragma warning restore SA1310
+#pragma warning restore SA1307
